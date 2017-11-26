@@ -64,6 +64,7 @@ class Account extends React.Component {
         openModal: null,
         newPassword: {},
         address: {},
+        prescription: {},
         fieldErrors: {}
     };
 
@@ -132,13 +133,25 @@ class Account extends React.Component {
         this.setState({address: address});
     };
 
+    handlePrescriptionFieldChange = (field, value) => {
+        let prescription = this.state.prescription;
+        prescription[field] = value;
+        this.setState({prescription: prescription});
+    };
+
     handleOpenModalClick = (modal, data) => {
         if (modal === 'newAddress' || modal === 'editAddress' || modal === 'deleteAddress') {
             this.setState({
                 openModal: modal,
                 address: Object.assign({}, data)
             });
-        } else {
+        } else if (modal === 'newPrescription' || modal === 'editPrescription' || modal === 'deletePrescription') {
+            this.setState({
+                openModal: modal,
+                prescription: Object.assign({}, data)
+            });
+        }
+         else {
             this.setState({openModal: modal});
         }
     };
@@ -186,8 +199,31 @@ class Account extends React.Component {
                     newPassword: this.state.newPassword.newPassword
                 });
             }
-        } else if (details === 'address') {
+        } else if (details === 'prescription') {
+            // Client-side validations
+            let fieldErrors = {};
+            if (!this.state.prescription.prescriptionName) {
+              fieldErrors.name = intlStore.getMessage(intlData, 'fieldRequired');
+              this.setState({
+                fieldErrors: fieldErrors
+              });
+            }
+            // Validation passed, trigger request
+            if (Object.keys(fieldErrors).length === 0) {
+              console.log(this.state.prescription);
+              this.context.executeAction(updateAccountDetails, {
+                prescription: this.state.prescription
+              });
+            }
 
+        } else if (details === 'deletePrescription') {
+            let prescriptions = this.props._user.prescriptions.filter(function (prescription) {
+                return prescription.id !== data.id;
+            });
+            this.context.executeAction(updateAccountDetails, {
+                prescriptions: prescriptions
+            });
+        } else if (details === 'address') {
             // Client-side validations
             let fieldErrors = {};
 
@@ -233,8 +269,7 @@ class Account extends React.Component {
 
     //*** Template ***//
 
-    render() {
-
+    render(){
         //
         // Helper methods & variables
         //
@@ -242,7 +277,7 @@ class Account extends React.Component {
         let intlStore = this.context.getStore(IntlStore);
 
         let countryOptions = [
-            {name: 'Portugal', value: 'PT'}
+            {name: 'United States', value: 'US'}
         ];
 
         let modal = () => {
@@ -277,6 +312,7 @@ class Account extends React.Component {
                             </div>
                         </div>
                     </Modal>
+
                 );
             } else if (this.state.openModal === 'changePassword') {
                 return (
@@ -321,6 +357,75 @@ class Account extends React.Component {
                         </div>
                     </Modal>
                 );
+            } else if (this.state.openModal === 'newPrescription' || this.state.openModal === 'editPrescription') {
+              let title = (this.state.openModal === 'newPrescription') ? intlStore.getMessage(intlData, 'newPrescription') : intlStore.getMessage(intlData, 'editPrescription');
+              let submitLabel = (this.state.openModal === 'newPrescription') ? intlStore.getMessage(intlData, 'save') : intlStore.getMessage(intlData, 'update');
+              return (
+                <Modal title={title}
+                       onCloseClick={this.handleModalCloseClick}>
+                       <div className="account__modal-form-item">
+                           <InlineItems>
+                               <InputField label={intlStore.getMessage(intlData, 'name')}
+                                           value={this.state.prescription.prescriptionName}
+                                           onChange={this.handlePrescriptionFieldChange.bind(null, 'prescriptionName')}
+                                           error={this.state.fieldErrors['prescriptionName']} />
+
+                           </InlineItems>
+                       </div>
+
+                       <div className="account__modal-form-item">
+                           <InputField label={intlStore.getMessage(intlData, 'pd')}
+                                       value={this.state.prescription.pd}
+                                       onChange={this.handlePrescriptionFieldChange.bind(null, 'pd')}
+                                       error={this.state.fieldErrors['pd']} />
+                       </div>
+
+                       <div className="account__modal-form-item">
+                           <InlineItems>
+                               <InputField value={this.state.prescription.leftSphere}
+                                           placeholder={intlStore.getMessage(intlData, 'sphere')}
+                                           onChange={this.handlePrescriptionFieldChange.bind(null, 'leftSphere')}
+                                           error={this.state.fieldErrors['leftSphere']} />
+
+                               <InputField value={this.state.prescription.leftSphere}
+                                           placeholder={intlStore.getMessage(intlData, 'sphere')}
+                                           onChange={this.handlePrescriptionFieldChange.bind(null, 'rightSphere')}
+                                           error={this.state.fieldErrors['rightSphere']} />
+
+                               <InputField placeholder={intlStore.getMessage(intlData, 'cylinder')}
+                                           onChange={this.handlePrescriptionFieldChange.bind(null, 'leftCylinder')}
+                                           value={this.state.prescription.leftCylinder}
+                                           error={this.state.fieldErrors['leftCylinder']} />
+                               <InputField placeholder={intlStore.getMessage(intlData, 'cylinder')}
+                                           onChange={this.handlePrescriptionFieldChange.bind(null, 'rightCylinder')}
+                                           value={this.state.prescription.rightCylinder}
+                                           error={this.state.fieldErrors['rightCylinder']} />
+
+                           </InlineItems>
+                       </div>
+
+                       // buttons
+                       <div className="account__modal-form-actions">
+                           <div className="account__modal-form-action-item">
+                               <Button type="default"
+                                       onClick={this.handleModalCloseClick}
+                                       disabled={this.state.loading}>
+                                   <FormattedMessage
+                                       message={intlStore.getMessage(intlData, 'cancel')}
+                                       locales={intlStore.getCurrentLocale()} />
+                               </Button>
+                           </div>
+                           <div className="account__modal-form-action-item">
+                               <Button type="primary"
+                                       onClick={this.handleModalSubmitClick.bind(null, 'prescription')}
+                                       disabled={this.state.loading}>
+                                   {submitLabel}
+                               </Button>
+                           </div>
+                       </div>
+
+                </Modal>
+              );
             } else if (this.state.openModal === 'newAddress' || this.state.openModal === 'editAddress') {
                 let title = (this.state.openModal === 'newAddress') ? intlStore.getMessage(intlData, 'newAddress') : intlStore.getMessage(intlData, 'editAddress');
                 let submitLabel = (this.state.openModal === 'newAddress') ? intlStore.getMessage(intlData, 'save') : intlStore.getMessage(intlData, 'update');
@@ -395,6 +500,37 @@ class Account extends React.Component {
                                         onClick={this.handleModalSubmitClick.bind(null, 'address')}
                                         disabled={this.state.loading}>
                                     {submitLabel}
+                                </Button>
+                            </div>
+                        </div>
+                    </Modal>
+                );
+            }  else if (this.state.openModal === 'deletePrescription') {
+                return (
+                    <Modal title={intlStore.getMessage(intlData, 'deletePrescription')}
+                           onCloseClick={this.handleModalCloseClick}>
+                        <div className="account__modal-form-item">
+                            <FormattedMessage
+                                message={intlStore.getMessage(intlData, 'deletePrescriptionConfirm')}
+                                locales={intlStore.getCurrentLocale()} />
+                        </div>
+                        <div className="account__modal-form-actions">
+                            <div className="account__modal-form-action-item">
+                                <Button type="default"
+                                        onClick={this.handleModalCloseClick}
+                                        disabled={this.state.loading}>
+                                    <FormattedMessage
+                                        message={intlStore.getMessage(intlData, 'cancel')}
+                                        locales={intlStore.getCurrentLocale()} />
+                                </Button>
+                            </div>
+                            <div className="account__modal-form-action-item">
+                                <Button type="primary"
+                                        onClick={this.handleModalSubmitClick.bind(null, 'deletePrescription', this.state.prescription)}
+                                        disabled={this.state.loading}>
+                                    <FormattedMessage
+                                        message={intlStore.getMessage(intlData, 'delete')}
+                                        locales={intlStore.getCurrentLocale()} />
                                 </Button>
                             </div>
                         </div>
@@ -505,6 +641,58 @@ class Account extends React.Component {
                                 </Button>
                             </div>
                         </div>
+
+
+                      // start Prescription
+                        <div className="account__addresses">
+                            <div className="account__addresses-title">
+                                <Heading size="medium">
+                                    <FormattedMessage
+                                        message={intlStore.getMessage(intlData, 'prescription')}
+                                        locales={intlStore.getCurrentLocale()} />
+                                </Heading>
+                            </div>
+                            <div className="account__addresses-actions">
+                                <Button className="account__addresses-new-button"
+                                        type="default"
+                                        fontSize="small"
+                                        onClick={this.handleOpenModalClick.bind(null, 'newPrescription', {})}
+                                        disabled={this.state.loading}>
+                                    <FormattedMessage
+                                        message={intlStore.getMessage(intlData, 'newPrescription')}
+                                        locales={intlStore.getCurrentLocale()} />
+                                </Button>
+                            </div>
+                            <div className="account__addresses-list">
+                                {this.props._user.prescriptions && this.props._user.prescriptions.map((prescription, idx) => {
+                                    return (
+                                        <div key={idx} className="account__addresses-item">
+                                            <div className="account__address-name">
+                                                <Text weight="bold">{prescription.prescriptionName}</Text>
+                                            </div>
+
+                                            <div className="account__address-actions">
+                                                <div className="account__address-edit" onClick={this.handleOpenModalClick.bind(null, 'editPrescription', prescription)}>
+                                                    <Text weight="bold">
+                                                        <FormattedMessage
+                                                            message={intlStore.getMessage(intlData, 'edit')}
+                                                            locales={intlStore.getCurrentLocale()} />
+                                                    </Text>
+                                                </div>
+                                                <div className="account__address-delete" onClick={this.handleOpenModalClick.bind(null, 'deletePrescription', prescription)}>
+                                                    <Text>
+                                                        <FormattedMessage
+                                                            message={intlStore.getMessage(intlData, 'delete')}
+                                                            locales={intlStore.getCurrentLocale()} />
+                                                    </Text>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                        // end Prescription
 
                         <div className="account__addresses">
                             <div className="account__addresses-title">

@@ -10,6 +10,8 @@ export default {
         delete: 'Delete',
         deleteAddress: 'Delete Address',
         deleteAddressConfirm: 'Are you sure you want to delete the address?',
+        deletePrescription: 'Delete Prescription',
+        deletePrescriptionConfirm: 'Are you sure you want to delete the prescription?',
         details: 'Details',
         edit: 'Edit',
         editAddress: 'Edit Address',
@@ -28,8 +30,17 @@ export default {
         title: 'My Account',
         update: 'Update',
         vatin: 'VAT Identification Number',
-        vatLabel: 'VAT'
+        vatLabel: 'VAT',
 
+        prescription: 'Prescription',
+        newPrescription: 'New Prescription',
+        editPrescription: 'Edit Prescription',
+        sphere: 'Sphere (SPH)',
+        cylinder: 'Cylinder (CYL)',
+        rightEye: 'OD (Right eye)',
+        leftEye: 'OS (Left eye)',
+        axis: 'Axis',
+        pd: 'PD(Pupillary Distance)'
     },
     pt: {
         address: 'Morada',
@@ -60,6 +71,13 @@ export default {
         title: 'A Minha Conta',
         update: 'Actualizar',
         vatin: 'Número de Identificação Fiscal',
-        vatLabel: 'NIF'
+        vatLabel: 'NIF',
+
+        sphere: 'Sphere (SPH)',
+        cylinder: 'Cylinder (CYL)',
+        rightEye: 'OD (Right eye)',
+        leftEye: 'OS (Left eye)',
+        axis: 'Axis',
+        pd: 'PD(Pupillary Distance)'
     }
 };
