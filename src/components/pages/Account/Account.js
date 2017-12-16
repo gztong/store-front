@@ -21,6 +21,7 @@ import FormLabel from '../../common/forms/FormLabel';
 import Heading from '../../common/typography/Heading';
 import InlineItems from '../../common/forms/InlineItems';
 import InputField from '../../common/forms/InputField';
+import PrescriptionModal from '../../common/prescription/PrescriptionModal';
 import Modal from '../../common/modals/Modal';
 import Select from '../../common/forms/Select';
 import Text from '../../common/typography/Text';
@@ -201,7 +202,7 @@ class Account extends React.Component {
             }
         } else if (details === 'prescription') {
             // Client-side validations
-            let fieldErrors = {};
+            {/*let fieldErrors = {};
             if (!this.state.prescription.prescriptionName) {
               fieldErrors.name = intlStore.getMessage(intlData, 'fieldRequired');
               this.setState({
@@ -214,7 +215,13 @@ class Account extends React.Component {
               this.context.executeAction(updateAccountDetails, {
                 prescription: this.state.prescription
               });
-            }
+            }*/}
+
+            console.log(this.state.prescription);
+            this.context.executeAction(updateAccountDetails, {
+              prescription: this.state.prescription
+            });
+
 
         } else if (details === 'deletePrescription') {
             let prescriptions = this.props._user.prescriptions.filter(function (prescription) {
@@ -361,69 +368,30 @@ class Account extends React.Component {
               let title = (this.state.openModal === 'newPrescription') ? intlStore.getMessage(intlData, 'newPrescription') : intlStore.getMessage(intlData, 'editPrescription');
               let submitLabel = (this.state.openModal === 'newPrescription') ? intlStore.getMessage(intlData, 'save') : intlStore.getMessage(intlData, 'update');
               return (
-                <Modal title={title}
-                       onCloseClick={this.handleModalCloseClick}>
-                       <div className="account__modal-form-item">
-                           <InlineItems>
-                               <InputField label={intlStore.getMessage(intlData, 'name')}
-                                           value={this.state.prescription.prescriptionName}
-                                           onChange={this.handlePrescriptionFieldChange.bind(null, 'prescriptionName')}
-                                           error={this.state.fieldErrors['prescriptionName']} />
+                <Modal title={title} onCloseClick={this.handleModalCloseClick}>
 
-                           </InlineItems>
-                       </div>
+                    <PrescriptionModal prescription = {this.state.prescription}
+                                       handleFieldChange = {this.handlePrescriptionFieldChange.bind(this)}>
+                    </PrescriptionModal>
 
-                       <div className="account__modal-form-item">
-                           <InputField label={intlStore.getMessage(intlData, 'pd')}
-                                       value={this.state.prescription.pd}
-                                       onChange={this.handlePrescriptionFieldChange.bind(null, 'pd')}
-                                       error={this.state.fieldErrors['pd']} />
-                       </div>
-
-                       <div className="account__modal-form-item">
-                           <InlineItems>
-                               <InputField value={this.state.prescription.leftSphere}
-                                           placeholder={intlStore.getMessage(intlData, 'sphere')}
-                                           onChange={this.handlePrescriptionFieldChange.bind(null, 'leftSphere')}
-                                           error={this.state.fieldErrors['leftSphere']} />
-
-                               <InputField value={this.state.prescription.leftSphere}
-                                           placeholder={intlStore.getMessage(intlData, 'sphere')}
-                                           onChange={this.handlePrescriptionFieldChange.bind(null, 'rightSphere')}
-                                           error={this.state.fieldErrors['rightSphere']} />
-
-                               <InputField placeholder={intlStore.getMessage(intlData, 'cylinder')}
-                                           onChange={this.handlePrescriptionFieldChange.bind(null, 'leftCylinder')}
-                                           value={this.state.prescription.leftCylinder}
-                                           error={this.state.fieldErrors['leftCylinder']} />
-                               <InputField placeholder={intlStore.getMessage(intlData, 'cylinder')}
-                                           onChange={this.handlePrescriptionFieldChange.bind(null, 'rightCylinder')}
-                                           value={this.state.prescription.rightCylinder}
-                                           error={this.state.fieldErrors['rightCylinder']} />
-
-                           </InlineItems>
-                       </div>
-
-                       // buttons
-                       <div className="account__modal-form-actions">
-                           <div className="account__modal-form-action-item">
-                               <Button type="default"
-                                       onClick={this.handleModalCloseClick}
-                                       disabled={this.state.loading}>
-                                   <FormattedMessage
-                                       message={intlStore.getMessage(intlData, 'cancel')}
-                                       locales={intlStore.getCurrentLocale()} />
-                               </Button>
-                           </div>
-                           <div className="account__modal-form-action-item">
-                               <Button type="primary"
-                                       onClick={this.handleModalSubmitClick.bind(null, 'prescription')}
-                                       disabled={this.state.loading}>
-                                   {submitLabel}
-                               </Button>
-                           </div>
-                       </div>
-
+                     <div className="account__modal-form-actions">
+                         <div className="account__modal-form-action-item">
+                             <Button type="default"
+                                     onClick={this.handleModalCloseClick}
+                                     disabled={this.state.loading}>
+                                 <FormattedMessage
+                                     message={intlStore.getMessage(intlData, 'cancel')}
+                                     locales={intlStore.getCurrentLocale()} />
+                             </Button>
+                         </div>
+                         <div className="account__modal-form-action-item">
+                             <Button type="primary"
+                                     onClick={this.handleModalSubmitClick.bind(null, 'prescription')}
+                                     disabled={this.state.loading}>
+                                 {submitLabel}
+                             </Button>
+                         </div>
+                     </div>
                 </Modal>
               );
             } else if (this.state.openModal === 'newAddress' || this.state.openModal === 'editAddress') {
@@ -668,7 +636,7 @@ class Account extends React.Component {
                                     return (
                                         <div key={idx} className="account__addresses-item">
                                             <div className="account__address-name">
-                                                <Text weight="bold">{prescription.prescriptionName}</Text>
+                                                <Text weight="bold">{prescription.name}</Text>
                                             </div>
 
                                             <div className="account__address-actions">

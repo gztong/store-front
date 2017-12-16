@@ -1,0 +1,52 @@
+ .container{
+ 	background: #f7f6f4;
+ 	border-top: 1px solid #d8d1ca;
+ }
+
+.right-panel {
+	border-left: 1px solid #d8d1ca;
+	margin: auto;
+}
+
+.nv-add {
+	margin: auto;
+}
+
+.field-row {
+	border-bottom: 1px solid #d8d1ca;
+	padding-bottom: 20px;
+	margin: auto;
+}
+.single-row {
+	border-bottom: 1px solid #d8d1ca;
+	padding-bottom: 40px;
+	margin-top: 20px;
+	text-align: center;
+}
+
+
+.label {
+	text-align: center;
+	margin: auto;
+}
+
+.radio-input{
+	display: inline-block;
+	margin-right: 2em;
+}
+
+ .field{
+    border: 1px grey;
+ }
+
+ .field .selection {
+   width: 220px;
+   height: auto;
+   max-height: 200px;
+   border:1px solid #ccc;
+   overflow-x: hidden;
+ }
+
+.input {
+  background: #f7f6f4;
+}

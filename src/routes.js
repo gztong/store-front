@@ -10,6 +10,8 @@ import NotFound from './components/pages/NotFound/NotFound';
 
 import Homepage from './components/pages/Homepage/Homepage';
 import Checkout from './components/pages/Checkout/Checkout';
+import Customize from './components/pages/Customize/Customize';
+
 import CollectionProductsPage from './components/pages/Collections/CollectionProductsPage';
 import ProductListingPage from './components/pages/Products/ProductListingPage';
 import ProductPage from './components/pages/Products/ProductPage';
@@ -64,6 +66,7 @@ const routes = (
         <Route name="product" path="products/:productId/?" handler={ProductPage} />
         <Route name="product-slug" path="products/:productId/:productSlug/?" handler={ProductPage} />
         <Route name="checkout" handler={Checkout} />
+        <Route name="customize" handler={Customize} />
         <Route name="stores" handler={StoresPage} />
         <Route name="info" handler={InfoPage} />
         <Route name="articles" path="articles/?" handler={ArticlesListingPage} />

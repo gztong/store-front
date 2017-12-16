@@ -72,7 +72,10 @@ export default {
         update: 'Actualizar',
         vatin: 'Número de Identificação Fiscal',
         vatLabel: 'NIF',
-
+        
+        prescription: 'Prescription',
+        newPrescription: 'New Prescription',
+        editPrescription: 'Edit Prescription',
         sphere: 'Sphere (SPH)',
         cylinder: 'Cylinder (CYL)',
         rightEye: 'OD (Right eye)',

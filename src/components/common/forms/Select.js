@@ -87,7 +87,7 @@ class Select extends React.Component {
                 }
                 <select key={id}
                         id={id}
-                        className={selectClass}
+                        className='custom-select'
                         value={this.state.value}
                         onChange={this.handleSelectChange}>
                     {this.props.placeholder ?

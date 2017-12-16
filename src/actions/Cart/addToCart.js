@@ -57,8 +57,10 @@ export default function addToCart(context, payload, done) {
     context.dispatch(cartActions.CART_UPDATE);
     context.api.cart.patch(cartId, {product: {
         id: payload.id,
-        quantity: payload.quantity
+        quantity: payload.quantity,
+        prescription: payload.prescription
     }}, cartAccessToken).then(function successFn(result) {
+        console.log(result);
         context.dispatch(cartActions.CART_UPDATE_SUCCESS, result);
         done && done();
     }, function errorFn(err) {
